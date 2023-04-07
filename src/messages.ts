@@ -1,6 +1,8 @@
+import { Secret } from "./secret.ts";
+
 export class Messages {
   private messages: Message[];
-  private maxLength = 20;
+  private maxLength = Number(Secret.PAST_COUNT) * 2;
   constructor() {
     this.messages = [];
   }
