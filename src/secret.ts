@@ -1,9 +1,15 @@
 import { dotenv } from "./deps.ts";
 
-dotenv.configSync({
-  export: true,
-  path: "./.env",
-});
+try {
+  dotenv.configSync({
+    export: true,
+    path: "./.env",
+  });
+} catch (e: unknown) {
+  if (e instanceof Error) {
+    console.error(e.message);
+  }
+}
 
 export const Secret = {
   DISCORD_TOKEN: Deno.env.get("DISCORD_TOKEN") || "",
