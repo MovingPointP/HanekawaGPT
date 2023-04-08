@@ -19,6 +19,11 @@ export class GPTMessages {
   }
 }
 
+export const systemMessage: GPTMessage = {
+  role: "system",
+  content: "あなたは知的な女子高生です。人との会話が好きです。",
+};
+
 export interface GPTMessage {
   role: string;
   content: string;

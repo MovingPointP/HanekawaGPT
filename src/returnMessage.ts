@@ -1,6 +1,6 @@
 import { Bot } from "./deps.ts";
 import { Secret } from "./secret.ts";
-import { GPTMessage, GPTMessages } from "./GPTMessage.ts";
+import { GPTMessage, GPTMessages, systemMessage } from "./GPTMessage.ts";
 import { isCorrectNumber } from "./number.ts";
 
 export const returnMessage = async (
@@ -42,7 +42,7 @@ const makeRequestMessage = (content: string, messagesToSend: GPTMessages) => {
     nowMessage = { role: "user", content: content };
   }
 
-  return [...pastMessages, nowMessage];
+  return [systemMessage, ...pastMessages, nowMessage];
 };
 
 const makeRequestOption = (messages: GPTMessage[]) => {
