@@ -1,16 +1,16 @@
 import { Bot } from "./deps.ts";
 import { Secret } from "./secret.ts";
-import { Message, Messages } from "./messages.ts";
-import { isCorrectNumber } from "./check.ts";
+import { GPTMessage, GPTMessages } from "./message.ts";
+import { isCorrectNumber } from "./number.ts";
 
 export const returnMessage = async (
   bot: Bot,
   content: string,
-  messagesToSend: Messages,
+  messagesToSend: GPTMessages,
 ) => {
   let countToLookBack = 0;
-  let pastMessages: Message[] = [];
-  let nowMessage: Message;
+  let pastMessages: GPTMessage[] = [];
+  let nowMessage: GPTMessage;
   const contents = content.split(" ");
 
   if (isCorrectNumber(contents[0])) {

@@ -1,16 +1,17 @@
 import { returnMessage } from "./returnMessage.ts";
 import { createBot, Intents, startBot } from "./deps.ts";
 import { Secret } from "./secret.ts";
-import { Messages } from "./messages.ts";
+import { GPTMessages } from "./message.ts";
+import { checkMessageToStop, stopBotActivity } from "./stopBot.ts";
 
-let messagesToSend: Messages;
+let messagesToSend: GPTMessages;
 const bot = createBot({
   token: Secret.DISCORD_TOKEN,
   intents: Intents.Guilds | Intents.GuildMessages | Intents.MessageContent,
   events: {
     ready: (_b, payload) => {
       console.log(`${payload.user.username} is ready!`);
-      messagesToSend = new Messages();
+      messagesToSend = new GPTMessages();
     },
   },
 });
@@ -18,6 +19,10 @@ const bot = createBot({
 bot.events.messageCreate = (bot, message) => {
   if (message.channelId !== BigInt(Secret.CHANNEL_ID)) return;
   if (message.isFromBot) return;
+  console.log(message);
+  if (checkMessageToStop(message)) {
+    stopBotActivity(bot);
+  }
   returnMessage(bot, message.content, messagesToSend);
 };
 

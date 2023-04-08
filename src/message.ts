@@ -1,7 +1,7 @@
 import { Secret } from "./secret.ts";
 
-export class Messages {
-  private messages: Message[];
+export class GPTMessages {
+  private messages: GPTMessage[];
   private maxLength = Number(Secret.PAST_COUNT) * 2;
   constructor() {
     this.messages = [];
@@ -11,7 +11,7 @@ export class Messages {
     return this.messages.slice(-(num));
   }
 
-  set(message: Message) {
+  set(message: GPTMessage) {
     this.messages.push(message); //後ろに追加
     while (this.messages.length > this.maxLength) {
       this.messages.shift(); //前から削除
@@ -19,7 +19,7 @@ export class Messages {
   }
 }
 
-export interface Message {
+export interface GPTMessage {
   role: string;
   content: string;
 }
