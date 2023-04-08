@@ -1,7 +1,7 @@
 import { returnMessage } from "./returnMessage.ts";
 import { createBot, Intents, startBot } from "./deps.ts";
 import { Secret } from "./secret.ts";
-import { GPTMessages } from "./message.ts";
+import { GPTMessages } from "./GPTMessage.ts";
 import { checkMessageToStop, stopBotActivity } from "./stopBot.ts";
 
 let messagesToSend: GPTMessages;

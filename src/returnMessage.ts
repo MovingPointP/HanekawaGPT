@@ -1,6 +1,6 @@
 import { Bot } from "./deps.ts";
 import { Secret } from "./secret.ts";
-import { GPTMessage, GPTMessages } from "./message.ts";
+import { GPTMessage, GPTMessages } from "./GPTMessage.ts";
 import { isCorrectNumber } from "./number.ts";
 
 export const returnMessage = async (
@@ -8,6 +8,27 @@ export const returnMessage = async (
   content: string,
   messagesToSend: GPTMessages,
 ) => {
+  const messages = makeRequestMessage(content, messagesToSend);
+  const options = makeRequestOption(messages);
+
+  let result: string;
+  try {
+    const response = await (await fetch(Secret.GPT_ENDPOINT, options)).json();
+    console.log(messages);
+    console.log(response);
+    result = response.choices[0].message.content;
+    messagesToSend.set(messages.slice(-1)[0]);
+    messagesToSend.set({ role: "assistant", content: result });
+  } catch (error) {
+    result = String(error);
+  } finally {
+    await bot.helpers.sendMessage(Secret.CHANNEL_ID, {
+      content: result!,
+    });
+  }
+};
+
+const makeRequestMessage = (content: string, messagesToSend: GPTMessages) => {
   let countToLookBack = 0;
   let pastMessages: GPTMessage[] = [];
   let nowMessage: GPTMessage;
@@ -21,8 +42,10 @@ export const returnMessage = async (
     nowMessage = { role: "user", content: content };
   }
 
-  const messages = [...pastMessages, nowMessage];
+  return [...pastMessages, nowMessage];
+};
 
+const makeRequestOption = (messages: GPTMessage[]) => {
   // リクエストヘッダ
   const headers = {
     "Authorization": "Bearer " + Secret.API_TOKEN,
@@ -40,19 +63,5 @@ export const returnMessage = async (
     }),
   };
 
-  let result: string;
-  try {
-    const response = await (await fetch(Secret.GPT_ENDPOINT, options)).json();
-    console.log(messages);
-    console.log(response);
-    result = response.choices[0].message.content;
-    messagesToSend.set(nowMessage);
-    messagesToSend.set({ role: "assistant", content: result });
-  } catch (error) {
-    result = String(error);
-  } finally {
-    await bot.helpers.sendMessage(Secret.CHANNEL_ID, {
-      content: result!,
-    });
-  }
+  return options;
 };
