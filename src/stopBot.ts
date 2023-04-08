@@ -8,9 +8,5 @@ export const stopBotActivity = (bot: Bot) => {
 
 export const checkMessageToStop = (message: Message) => {
   if (!message.member?.roles.includes(BigInt(Secret.ROLE_ID))) return false;
-  if (message.content === "停止") {
-    return true;
-  } else {
-    return false;
-  }
+  return message.content === "停止";
 };
