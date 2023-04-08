@@ -19,7 +19,6 @@ const bot = createBot({
 bot.events.messageCreate = (bot, message) => {
   if (message.channelId !== BigInt(Secret.CHANNEL_ID)) return;
   if (message.isFromBot) return;
-  console.log(message);
   if (checkMessageToStop(message)) {
     stopBotActivity(bot);
   }
